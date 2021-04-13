@@ -1,52 +1,48 @@
 class SuperSelect {
   
-  static CONTROL_LAYER_MAP = {
-    token: 'TokenLayer',
-    tiles: 'TilesLayer',
-    drawings: 'DrawingsLayer'
-  }
-  
-  static addControls(layerKey) {
-    return (toggled) => {
-      const currLayer = SuperSelect.CONTROL_LAYER_MAP[layerKey];
-      if (toggled) {
-        let mergedObjects = canvas.getLayer(currLayer).objects.children
-        const others = Object.keys(SuperSelect.CONTROL_LAYER_MAP).filter(key => key != layerKey);
-        for (let ii = 0; ii < others.length; ii++) {
-          const other = SuperSelect.CONTROL_LAYER_MAP[others[ii]];
-          const enriched = canvas.getLayer(other).objects.children.map(child => {
-            if (child.updateSource == undefined) {
-              child.updateSource = function () {};
-            }
-            return child;
-          });
-          mergedObjects = mergedObjects.concat(enriched);
-        };
-        canvas.getLayer(currLayer).objects.children = mergedObjects;
-      } else {
-        const tileObjects = canvas.getLayer(currLayer).objects;
-        const filteredObjects = tileObjects.children.filter(child => child.layer.name == currLayer);
-        tileObjects.children = filteredObjects;
-      }
+  static ACTIVE_LAYERS = [
+    'TokenLayer',
+    'TilesLayer',
+    'DrawingsLayer'
+  ]
+
+  static _addControls(toggled) {
+    if (toggled) {
+      let mergedObjects = canvas.activeLayer.objects.children
+      const otherLayers = SuperSelect.ACTIVE_LAYERS.filter(layer => layer != canvas.activeLayer.name);
+      for (let i = 0; i < otherLayers.length; i++) {
+        const enriched = canvas.getLayer(otherLayers[i]).placeables.map(child => {
+          if (child.updateSource == undefined) {
+            child.updateSource = function () {};
+          }
+          return child;
+        });
+        mergedObjects = mergedObjects.concat(enriched);
+      };
+      canvas.activeLayer.objects.children = mergedObjects;
+    } else {
+      canvas.activeLayer.releaseAll();
+      const placeables = canvas.activeLayer.placeables;
+      const originalPlaceables = placeables.filter(child => child.layer.name == canvas.activeLayer.name);
+      canvas.activeLayer.objects.children = originalPlaceables;
     }
   }
-  
+
   static _getControlButtons(controls){
-    for (let i = 0; i < controls.length; i++) {
-      if (Object.keys(SuperSelect.CONTROL_LAYER_MAP).includes(controls[i].name)) {
-        const layerKey = controls[i].name;
-        controls[i].tools.push({
+    controls.forEach( control => {
+      if (SuperSelect.ACTIVE_LAYERS.includes(control.layer)) {
+        control.tools.push({
           name: "SuperSelect",
           title: "Super Select Mode",
           icon: "fas fa-object-group",
           toggle: true,
           visible: game.user.isGM,
-          onClick: SuperSelect.addControls(layerKey),
-          layer: SuperSelect.CONTROL_LAYER_MAP[layerKey],
+          onClick: SuperSelect._addControls,
+          layer: control.layer,
           activeTool: "select"
         });
       }
-    }
+    })
   }
 
 }

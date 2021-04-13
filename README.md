@@ -12,4 +12,4 @@ I am Doing it as a hobby. Feedback more than welcome.
 @JeansenVaars
 
 ## Example
-![Example GIF](./example.gif)
+![Example GIF](./example-1.gif)

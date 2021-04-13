@@ -2,14 +2,14 @@
 	"name": "super-select",
 	"title": "Super Select",
 	"author": "JeansenVaars#2857",
-	"description": "Adds a selection tool capable of selecting what is visible",
+	"description": "Adds a selection toggle to allow selecting tokens, drawings and tiles at the same time.",
 	"version": "0.0.1",
 	"minimumCoreVersion": "0.7.9",
 	"compatibleCoreVersion": "0.7.9",
-  "esmodules": [],
-	"styles": [ "superselect.css" ],
+  	"esmodules": [],
+	"styles": [],
 	"scripts": [ "superselect.js" ],
-	"url": "https://github.com/saif-ellafi/foundryvtt-minimal-ui.git",
-	"manifest": "https://raw.githubusercontent.com/saif-ellafi/foundryvtt-minimal-ui/main/module.json",
-	"download": "https://github.com/saif-ellafi/foundryvtt-minimal-ui/archive/main.zip"
+	"url": "https://github.com/saif-ellafi/foundryvtt-super-select",
+	"manifest": "https://raw.githubusercontent.com/saif-ellafi/foundryvtt-super-select/master/module.json",
+	"download": "https://github.com/saif-ellafi/foundryvtt-super-select/archive/refs/heads/master.zip"
 }
