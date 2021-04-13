@@ -1,9 +1,10 @@
 # Super Select for FoundryVTT
-This module adds a control toggle that allows selecting objects form the canvas.
-When activated, tokens, tiles, and drawings can be selected and worked on regardless of current layer.
+Adds a control toggle that allows selecting tokens, tiles and drawings at the same time.
 
-## Code Notes
-* Objects of different types may not be moved together (yet)
+## Notes
+* There is a configuration that allows having Super Select mode on by default
+* Objects of different types may not be moved together simultaneously (yet)
+* It is recommended to use Foundry VTT's setting to release on left-click
 * The code is ugly, but it is lightweight and self-contained.
 
 ## Please say thanks if you enjoy this!
