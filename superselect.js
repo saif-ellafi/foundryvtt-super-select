@@ -33,7 +33,7 @@ class SuperSelect {
       if (SuperSelect.ACTIVE_LAYERS.includes(control.layer)) {
         control.tools.push({
           name: "SuperSelect",
-          title: "Super Select Mode",
+          title: "Super Select",
           icon: "fas fa-object-group",
           toggle: true,
           visible: game.user.isGM,
