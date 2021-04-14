@@ -1,3 +1,8 @@
+### 0.0.5
+* Compatibility: Supports modules & systems that drop objects into the scene like Clocks
+* Bugfix: Fixed a bug of disappearing tiles while in Fog of War mode and Super Select mode
+* Bugfix: Fixed issue related to selecting multiple object of different types
+
 ### 0.0.4
 * Bugfix: Fixed initial state on always-on mode
 

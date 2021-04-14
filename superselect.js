@@ -45,6 +45,16 @@ class SuperSelect {
     SuperSelect._mergedLayer = undefined;
   }
 
+  static _refreshSuperSelect(forceRemember) {
+    if (SuperSelect._mergedLayer) {
+      console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
+      SuperSelect._deactivateSuperMode(canvas.getLayer(SuperSelect._mergedLayer));
+    }
+    if (canvas && (forceRemember || SuperSelect._getInitialState())) {
+      SuperSelect._activateSuperMode();
+    }
+  }
+
   static _releaseDifferentPlaceables(entity) {
     canvas.activeLayer.placeables.filter(placeable => {
       let cond1 = placeable._controlled;
@@ -67,8 +77,7 @@ class SuperSelect {
   static _inSuperSelectMode() {
     return ui.controls
       .controls.find(c => c.name == ui.controls.activeControl)
-      .tools.find(t => t.name == "superselect")
-      .active;
+      .tools.find(t => t.name == "superselect")?.active;
   }
 
   static _getControlButtons(controls){
@@ -87,14 +96,7 @@ class SuperSelect {
           layer: control.layer,
           activeTool: "select"
         });
-        const lastStateBeforeCleanup = SuperSelect._getInitialState();
-        if (SuperSelect._mergedLayer) {
-          console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
-          SuperSelect._deactivateSuperMode(canvas.getLayer(SuperSelect._mergedLayer));
-        }
-        if (canvas && lastStateBeforeCleanup) {
-          SuperSelect._activateSuperMode();
-        }
+        SuperSelect._refreshSuperSelect();
       }
     })
   }
@@ -107,20 +109,49 @@ Hooks.on('getSceneControlButtons', (controls) => {
   }
 });
 
+// Selecting and De-Selecting management
+
 Hooks.on('controlTile', (tile, into) => {
-  if (SuperSelect._inSuperSelectMode && into)
+  if (SuperSelect._inSuperSelectMode() && into)
     SuperSelect._releaseDifferentPlaceables(tile);
 });
 
 Hooks.on('controlDrawing', (drawing, into) => {
-  if (SuperSelect._inSuperSelectMode && into)
+  if (SuperSelect._inSuperSelectMode() && into)
     SuperSelect._releaseDifferentPlaceables(drawing);
 });
 
 Hooks.on('controlToken', (token, into) => {
-  if (SuperSelect._inSuperSelectMode && into)
+  if (SuperSelect._inSuperSelectMode() && into)
     SuperSelect._releaseDifferentPlaceables(token);
 });
+
+// Handling foreign drawers outside of appropriate layer
+
+Hooks.on('createDrawing', () => {
+  if (canvas.activeLayer.name != 'DrawingsLayer' && SuperSelect._inSuperSelectMode()) {
+    console.log("Super Select: Refreshing because of new drawings outside of activeLayer")
+    SuperSelect._refreshSuperSelect(true);
+  }
+});
+
+Hooks.on('createTile', () => {
+  if (canvas.activeLayer.name != 'TilesLayer' && SuperSelect._inSuperSelectMode()) {
+    console.log("Super Select: Refreshing because of new tiles outside of activeLayer")
+    SuperSelect._refreshSuperSelect(true);
+  }
+});
+
+// Sight visibility tweaks
+Hooks.on('sightRefresh', () => {
+  if (canvas.activeLayer.name == 'TokenLayer' && SuperSelect._inSuperSelectMode()) {
+    canvas.activeLayer.placeables.forEach(placeable => {
+      if (placeable.visible == undefined) placeable.visible = true;
+    })
+  }
+});
+
+// Register configuration
 
 Hooks.once('init', () => {
 
