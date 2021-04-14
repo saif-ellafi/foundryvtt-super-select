@@ -6,26 +6,30 @@ class SuperSelect {
     'DrawingsLayer'
   ]
 
+  static _mergedLayer;
+
   static _activateSuperMode() {
-    let mergedObjects = canvas.activeLayer.objects.children
-    const otherLayers = SuperSelect.ACTIVE_LAYERS.filter(layer => layer != canvas.activeLayer.name);
-    for (let i = 0; i < otherLayers.length; i++) {
-      const enriched = canvas.getLayer(otherLayers[i]).placeables.map(child => {
+    let mergedPlaceables = []
+    SuperSelect.ACTIVE_LAYERS.forEach(layer => {
+      const enriched = canvas.getLayer(layer).placeables.map(child => {
         if (child.updateSource == undefined) {
           child.updateSource = function () {};
         }
         return child;
       });
-      mergedObjects = mergedObjects.concat(enriched);
-    };
-    canvas.activeLayer.objects.children = mergedObjects;
+      mergedPlaceables = mergedPlaceables.concat(enriched);
+    });
+    canvas.activeLayer.objects.children = mergedPlaceables;
+    SuperSelect._mergedLayer = canvas.activeLayer.name;
   }
 
-  static _deactivateSuperMode() {
-    canvas.activeLayer.releaseAll();
-    const placeables = canvas.activeLayer.placeables;
-    const originalPlaceables = placeables.filter(child => child.layer.name == canvas.activeLayer.name);
-    canvas.activeLayer.objects.children = originalPlaceables;
+  static _deactivateSuperMode(layer) {
+    const activeLayer = layer ?? canvas.activeLayer
+    const placeables = activeLayer.placeables;
+    const originalPlaceables = placeables.filter(child => child.layer.name == activeLayer.name);
+    activeLayer.releaseAll();
+    activeLayer.objects.children = originalPlaceables;
+    SuperSelect._mergedLayer = undefined;
   }
 
   static _releaseDifferentPlaceables(entity) {
@@ -56,7 +60,13 @@ class SuperSelect {
 
   static _getControlButtons(controls){
     controls.forEach( control => {
-      if (SuperSelect.ACTIVE_LAYERS.includes(control.layer)) {
+      const cond1 = (canvas && SuperSelect.ACTIVE_LAYERS.includes(control.layer) && canvas.activeLayer.name == control.layer);
+      const cond2 = (!canvas && control.layer == 'TokenLayer');
+      if (cond1 || cond2) {
+        if (SuperSelect._mergedLayer) {
+          console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
+          SuperSelect._deactivateSuperMode(canvas.getLayer(SuperSelect._mergedLayer));
+        }
         control.tools.push({
           name: "superselect",
           title: "Super Select",
@@ -68,17 +78,18 @@ class SuperSelect {
           layer: control.layer,
           activeTool: "select"
         });
+        if (canvas && game.settings.get("super-select", "startEnabled")) {
+          SuperSelect._activateSuperMode();
+        }
       }
     })
   }
+
 }
 
 Hooks.on('getSceneControlButtons', (controls) => {
   if (game.user.isGM) {
     SuperSelect._getControlButtons(controls)
-    if (game.settings.get("super-select", "startEnabled")) {
-      SuperSelect._activateSuperMode();
-    }
   }
 });
 
@@ -96,7 +107,6 @@ Hooks.on('controlToken', (token, into) => {
   if (SuperSelect._inSuperSelectMode && into)
     SuperSelect._releaseDifferentPlaceables(token);
 });
-
 
 Hooks.once('init', () => {
 
