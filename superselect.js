@@ -1,12 +1,25 @@
 class SuperSelect {
   
   static ACTIVE_LAYERS = [
-    'TokenLayer',
+    'DrawingsLayer',
     'TilesLayer',
-    'DrawingsLayer'
+    'TokenLayer'
   ]
 
   static _mergedLayer;
+
+  static _getInitialState() {
+    switch(game.settings.get("super-select", "startEnabled")) {
+      case 'yes':
+        return true;
+      case 'no':
+        return false;
+      case 'remember':
+        return SuperSelect._mergedLayer ? true : false;
+      default:
+        return false;
+    }
+  }
 
   static _activateSuperMode() {
     let mergedPlaceables = []
@@ -63,22 +76,23 @@ class SuperSelect {
       const cond1 = (canvas && SuperSelect.ACTIVE_LAYERS.includes(control.layer) && canvas.activeLayer.name == control.layer);
       const cond2 = (!canvas && control.layer == 'TokenLayer');
       if (cond1 || cond2) {
-        if (SuperSelect._mergedLayer) {
-          console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
-          SuperSelect._deactivateSuperMode(canvas.getLayer(SuperSelect._mergedLayer));
-        }
         control.tools.push({
           name: "superselect",
           title: "Super Select",
           icon: "fas fa-object-group",
           toggle: true,
-          active: game.settings.get("super-select", "startEnabled"),
+          active: SuperSelect._getInitialState(),
           visible: game.user.isGM,
           onClick: SuperSelect._addControls,
           layer: control.layer,
           activeTool: "select"
         });
-        if (canvas && game.settings.get("super-select", "startEnabled")) {
+        const lastStateBeforeCleanup = SuperSelect._mergedLayer;
+        if (SuperSelect._mergedLayer) {
+          console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
+          SuperSelect._deactivateSuperMode(canvas.getLayer(SuperSelect._mergedLayer));
+        }
+        if (canvas && lastStateBeforeCleanup) {
           SuperSelect._activateSuperMode();
         }
       }
@@ -112,11 +126,16 @@ Hooks.once('init', () => {
 
   game.settings.register("super-select", "startEnabled", {
     name: "Super Select enabled by Default",
-    hint: "Whether to have Super Select toggled on by default.",
+    hint: "Whether to have Super Select toggled yes/no/remember when changin layers.",
     scope: "world",
     config: true,
-    default: false,
-    type: Boolean
+    default: 'no',
+    type: String,
+    choices: {
+      "yes": "Yes",
+      "no": "No",
+      "remember": "Remember Last"
+    }
   });
 
 });

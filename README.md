@@ -3,6 +3,7 @@ Adds a control toggle that allows selecting tokens, tiles and drawings at the sa
 
 ## Notes
 * There is a configuration that allows having Super Select mode on by default
+* Tokens have priority on top of drawings and tiles
 * Objects of different types may not be selected together simultaneously (yet?)
 * It is recommended to use Foundry VTT's setting to release on left-click
 * The code is ugly, but it is lightweight, fast and self-contained
