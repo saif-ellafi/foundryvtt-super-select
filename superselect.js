@@ -45,6 +45,11 @@ class SuperSelect {
     SuperSelect._mergedLayer = undefined;
   }
 
+  static _simulateSuperClick() {
+    if (SuperSelect.ACTIVE_LAYERS.includes(canvas.activeLayer.name))
+      $("#controls li.control-tool.toggle[title='Super Select']")?.click();
+  }
+
   static _refreshSuperSelect(forceRemember) {
     if (SuperSelect._mergedLayer) {
       console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
@@ -66,7 +71,7 @@ class SuperSelect {
     });
   }
 
-  static _addControls(toggled) {
+  static _toggleSuperMode(toggled) {
     if (toggled) {
       SuperSelect._activateSuperMode();
     } else {
@@ -92,7 +97,7 @@ class SuperSelect {
           toggle: true,
           active: SuperSelect._getInitialState(),
           visible: game.user.isGM,
-          onClick: SuperSelect._addControls,
+          onClick: SuperSelect._toggleSuperMode,
           layer: control.layer,
           activeTool: "select"
         });
@@ -151,6 +156,25 @@ Hooks.on('sightRefresh', () => {
   }
 });
 
+// Delete Handler for foreigner placeables
+
+$(document).keydown((event) => {
+  if (SuperSelect._inSuperSelectMode()) {
+    // 46 == Delete ----- 8 == Backspace
+    if (event.which === 46 || event.which === 8) {
+      const toDelete = canvas.activeLayer.placeables.filter(placeable => {
+        return placeable._controlled && placeable.layer.name != canvas.activeLayer.name
+      });
+      if (toDelete.length > 0) {
+        canvas.activeLayer.objects.children = canvas.activeLayer.placeables.filter(placeable => {
+          return !toDelete.includes(placeable);
+        });
+        toDelete.forEach(placeable => placeable.delete());
+      }
+    }
+  }
+});
+
 // Register configuration
 
 Hooks.once('init', () => {
@@ -168,5 +192,20 @@ Hooks.once('init', () => {
       "remember": "Remember Last"
     }
   });
+
+  if (game.modules.get("lib-df-hotkeys")?.active) {
+    Hotkeys.registerGroup({
+      name: 'super-select',
+      label: "Super Select"
+    });
+
+    Hotkeys.registerShortcut({
+      name: 'super-select.super-mode-hotkey',
+      label: 'Super Select',
+      group: 'super-select',
+      default: () => { return { key: Hotkeys.keys.KeyS, alt: false, ctrl: false, shift: true }; },
+      onKeyDown: self => { SuperSelect._simulateSuperClick() },
+    });
+  }
 
 });

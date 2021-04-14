@@ -1,3 +1,7 @@
+### 0.0.6
+* Enhancement: All Placeables can be now deleted in Super Select Mode 
+* Compatibility: Added support for DF Hotkeys (Default Shift+S)
+
 ### 0.0.5
 * Compatibility: Supports modules & systems that drop objects into the scene like Clocks
 * Bugfix: Fixed a bug of disappearing tiles while in Fog of War mode and Super Select mode
