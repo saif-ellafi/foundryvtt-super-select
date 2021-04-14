@@ -28,6 +28,17 @@ class SuperSelect {
     canvas.activeLayer.objects.children = originalPlaceables;
   }
 
+  static _releaseDifferentPlaceables(entity) {
+    canvas.activeLayer.placeables.filter(placeable => {
+      let cond1 = placeable._controlled;
+      let cond2 = placeable.layer.name != entity.layer.name;
+      let cond3 = placeable.id != entity.id;
+      return cond1 && cond2 && cond3
+    }).forEach(placeable => {
+      placeable.release()
+    });
+  }
+
   static _addControls(toggled) {
     if (toggled) {
       SuperSelect._activateSuperMode();
@@ -36,11 +47,18 @@ class SuperSelect {
     }
   }
 
+  static _inSuperSelectMode() {
+    return ui.controls
+      .controls.find(c => c.name == ui.controls.activeControl)
+      .tools.find(t => t.name == "superselect")
+      .active;
+  }
+
   static _getControlButtons(controls){
     controls.forEach( control => {
       if (SuperSelect.ACTIVE_LAYERS.includes(control.layer)) {
         control.tools.push({
-          name: "SuperSelect",
+          name: "superselect",
           title: "Super Select",
           icon: "fas fa-object-group",
           toggle: true,
@@ -63,6 +81,22 @@ Hooks.on('getSceneControlButtons', (controls) => {
     }
   }
 });
+
+Hooks.on('controlTile', (tile, into) => {
+  if (SuperSelect._inSuperSelectMode && into)
+    SuperSelect._releaseDifferentPlaceables(tile);
+});
+
+Hooks.on('controlDrawing', (drawing, into) => {
+  if (SuperSelect._inSuperSelectMode && into)
+    SuperSelect._releaseDifferentPlaceables(drawing);
+});
+
+Hooks.on('controlToken', (token, into) => {
+  if (SuperSelect._inSuperSelectMode && into)
+    SuperSelect._releaseDifferentPlaceables(token);
+});
+
 
 Hooks.once('init', () => {
 
