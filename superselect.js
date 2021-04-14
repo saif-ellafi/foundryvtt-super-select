@@ -87,7 +87,7 @@ class SuperSelect {
           layer: control.layer,
           activeTool: "select"
         });
-        const lastStateBeforeCleanup = SuperSelect._mergedLayer;
+        const lastStateBeforeCleanup = SuperSelect._getInitialState();
         if (SuperSelect._mergedLayer) {
           console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
           SuperSelect._deactivateSuperMode(canvas.getLayer(SuperSelect._mergedLayer));
