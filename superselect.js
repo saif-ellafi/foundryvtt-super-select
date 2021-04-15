@@ -172,13 +172,13 @@ $(document).keydown((event) => {
   }
 });
 
-Hooks.on('deleteToken', (a, b, c, id) => {
+Hooks.on('deleteToken', () => {
   if (canvas.activeLayer.name != 'TokenLayer' && SuperSelect._inSuperSelectMode()) {
     SuperSelect._refreshSuperSelect(true);
   }
 });
 
-Hooks.on('deleteDrawing', (a, b, c, id) => {
+Hooks.on('deleteDrawing', () => {
   if (canvas.activeLayer.name != 'DrawingsLayer' && SuperSelect._inSuperSelectMode()) {
     SuperSelect._refreshSuperSelect(true);
   }
