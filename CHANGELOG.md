@@ -1,3 +1,6 @@
+### 0.0.7
+* Compatibility: Changed the way Super Select handles foreign deletions. Should Improve module compatibility.
+
 ### 0.0.6
 * Enhancement: All Placeables can be now deleted in Super Select Mode 
 * Compatibility: Added support for DF Hotkeys (Default Shift+S)

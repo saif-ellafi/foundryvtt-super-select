@@ -156,7 +156,7 @@ Hooks.on('sightRefresh', () => {
   }
 });
 
-// Delete Handler for foreigner placeables
+// Delete Handlers for foreigner placeables
 
 $(document).keydown((event) => {
   if (SuperSelect._inSuperSelectMode()) {
@@ -166,12 +166,27 @@ $(document).keydown((event) => {
         return placeable._controlled && placeable.layer.name != canvas.activeLayer.name
       });
       if (toDelete.length > 0) {
-        canvas.activeLayer.objects.children = canvas.activeLayer.placeables.filter(placeable => {
-          return !toDelete.includes(placeable);
-        });
         toDelete.forEach(placeable => placeable.delete());
       }
     }
+  }
+});
+
+Hooks.on('deleteToken', (a, b, c, id) => {
+  if (canvas.activeLayer.name != 'TokenLayer' && SuperSelect._inSuperSelectMode()) {
+    SuperSelect._refreshSuperSelect(true);
+  }
+});
+
+Hooks.on('deleteDrawing', (a, b, c, id) => {
+  if (canvas.activeLayer.name != 'DrawingsLayer' && SuperSelect._inSuperSelectMode()) {
+    SuperSelect._refreshSuperSelect(true);
+  }
+});
+
+Hooks.on('deleteTile', () => {
+  if (canvas.activeLayer.name != 'TilesLayer' && SuperSelect._inSuperSelectMode()) {
+    SuperSelect._refreshSuperSelect(true);
   }
 });
 
