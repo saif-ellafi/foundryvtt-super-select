@@ -1,3 +1,8 @@
+### 0.0.8
+* Enhancement: Copy-Paste works in Super Select mode (Changes to corresponding Layer)
+* Bugfix: Fixed always remember mode
+* Bugfix: Fixed minor state issues
+
 ### 0.0.7
 * Compatibility: Changed the way Super Select handles foreign deletions. Should Improve module compatibility.
 

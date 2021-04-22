@@ -1,5 +1,5 @@
 # Super Select for FoundryVTT
-Adds a control toggle that allows selecting tokens, tiles and drawings at the same time.
+Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.
 
 ## By JeansenVaars
 ![JVLogo](logo-small-black.png)
