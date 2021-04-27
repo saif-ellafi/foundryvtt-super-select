@@ -22,6 +22,9 @@ I am Doing it as a hobby. Feedback more than welcome.
 ## Example
 ![Example GIF](./example-1.gif)
 
+# License
+[MIT License](./LICENSE.md)
+
 # Powered By
 [![JetBrains](./jetbrains.svg)](https://www.jetbrains.com)
 
