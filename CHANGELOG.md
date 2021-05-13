@@ -1,3 +1,6 @@
+### 0.0.9
+* Compatibility: Foundry VTT 0.8.3+
+
 ### 0.0.8
 * Enhancement: Copy-Paste works in Super Select mode (Changes to corresponding Layer)
 * Bugfix: Fixed always remember mode

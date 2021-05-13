@@ -3,9 +3,12 @@
 	"title": "Super Select",
 	"author": "JeansenVaars#2857",
 	"description": "Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.",
-	"version": "0.0.8",
-	"minimumCoreVersion": "0.7.9",
-	"compatibleCoreVersion": "0.7.9",
+	"version": "0.0.9",
+	"minimumCoreVersion": "0.8.3",
+	"compatibleCoreVersion": "0.8.3",
+	"dependencies": [
+		{"name": "lib-wrapper"}
+	],
   	"esmodules": [],
 	"styles": [],
 	"scripts": [ "superselect.js" ],

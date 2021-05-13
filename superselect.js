@@ -173,11 +173,14 @@ $(document).keydown((event) => {
   if (SuperSelect.inSuperSelectMode()) {
     // 46 == Delete ----- 8 == Backspace
     if (event.which === 46 || event.which === 8) {
-      const toDelete = canvas.activeLayer.placeables.filter(placeable => {
-        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.options.name
+      const toDeleteIds = canvas.activeLayer.placeables.filter(placeable => {
+        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.name
       });
-      if (toDelete.length > 0) {
-        toDelete.forEach(placeable => placeable.delete());
+      if (toDeleteIds.length > 0) {
+        game.scenes.active.deleteEmbeddedDocuments(
+            toDeleteIds[0].document.documentName,
+            toDeleteIds.map(placeable => placeable.id)
+        )
       }
     }
     // 17 == ctrl ----- 91 == cmd
@@ -196,7 +199,7 @@ $(document).keydown((event) => {
     if (SuperSelect.ctrlPressed && event.which === 67 ) {
       SuperSelect.ctrlPressed = false;
       const toCopy = canvas.activeLayer.placeables.filter(placeable => {
-        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.options.name
+        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.name
       });
       if (toCopy.length > 0) {
         SuperSelect._copy = [];
@@ -284,5 +287,9 @@ Hooks.once('init', () => {
       onKeyDown: _ => { if (game.user.isGM) SuperSelect.simulateSuperClick() },
     });
   }
+
+  libWrapper.register('super-select', 'PlaceableObject.prototype._canControl', function (wrapped, ...args) {
+    return this.document.canUserModify(game.user, "update");
+  }, 'OVERRIDE');
 
 });
