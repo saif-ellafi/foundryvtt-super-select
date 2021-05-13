@@ -28,6 +28,7 @@ class SuperSelect {
   }
 
   static _activateSuperMode() {
+    if (!canvas.ready) return;
     let mergedPlaceables = []
     Object.keys(SuperSelect.ACTIVE_LAYERS).forEach(layer => {
       const enriched = canvas.getLayer(layer).placeables.map(child => {
@@ -160,7 +161,7 @@ Hooks.on('createTile', () => {
 
 // Sight visibility tweaks
 Hooks.on('sightRefresh', () => {
-  if (SuperSelect.inSuperSelectMode() && canvas.activeLayer.options.name === 'tokens') {
+  if (canvas.ready && SuperSelect.inSuperSelectMode() && canvas.activeLayer?.options.name === 'tokens') {
     canvas.activeLayer.placeables.forEach(placeable => {
       if (placeable.visible === undefined) placeable.visible = true;
     })
