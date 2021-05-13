@@ -3,6 +3,7 @@ class SuperSelect {
   static ACTIVE_LAYERS = {
     DrawingsLayer: 'drawings',
     BackgroundLayer: 'background',
+    ForegroundLayer: 'foreground',
     TokenLayer: 'tokens'
   }
 
