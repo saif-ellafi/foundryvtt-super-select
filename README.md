@@ -8,6 +8,7 @@ Adds a control toggle that allows selecting, copying & deleting tokens, tiles an
 
 ## Check out my other modules!
 * Minimal UI
+* Scene Preview
 * Window Controls
 
 ## Notes
