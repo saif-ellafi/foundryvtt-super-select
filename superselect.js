@@ -174,14 +174,11 @@ $(document).keydown((event) => {
   if (SuperSelect.inSuperSelectMode()) {
     // 46 == Delete ----- 8 == Backspace
     if (event.which === 46 || event.which === 8) {
-      const toDeleteIds = canvas.activeLayer.placeables.filter(placeable => {
+      const toDelete = canvas.activeLayer.placeables.filter(placeable => {
         return placeable._controlled && placeable.layer.name !== canvas.activeLayer.name
       });
-      if (toDeleteIds.length > 0) {
-        game.scenes.active.deleteEmbeddedDocuments(
-            toDeleteIds[0].document.documentName,
-            toDeleteIds.map(placeable => placeable.id)
-        )
+      if (toDelete.length > 0) {
+        toDelete.forEach(placeable => placeable.document.delete());
       }
     }
     // 17 == ctrl ----- 91 == cmd

@@ -1,3 +1,6 @@
+### 0.1.0
+* Bugfix: Better implementation of delete method for Foundry 0.8.3+
+
 ### 0.0.9
 * Compatibility: Foundry VTT 0.8.3+
 
