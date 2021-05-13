@@ -1,10 +1,10 @@
 class SuperSelect {
 
-  static ACTIVE_LAYERS = [
-    'DrawingsLayer',
-    'TilesLayer',
-    'TokenLayer'
-  ]
+  static ACTIVE_LAYERS = {
+    DrawingsLayer: 'drawings',
+    BackgroundLayer: 'background',
+    TokenLayer: 'tokens'
+  }
 
   static ctrlPressed = false;
   static shiftPressed = false;
@@ -29,7 +29,7 @@ class SuperSelect {
 
   static _activateSuperMode() {
     let mergedPlaceables = []
-    SuperSelect.ACTIVE_LAYERS.forEach(layer => {
+    Object.keys(SuperSelect.ACTIVE_LAYERS).forEach(layer => {
       const enriched = canvas.getLayer(layer).placeables.map(child => {
         if (child.updateSource === undefined) {
           child.updateSource = function () {};
@@ -60,7 +60,7 @@ class SuperSelect {
   }
 
   static simulateSuperClick() {
-    if (SuperSelect.ACTIVE_LAYERS.includes(canvas.activeLayer.name))
+    if (Object.values(SuperSelect.ACTIVE_LAYERS).includes(canvas.activeLayer.options.name))
       $("#controls li.control-tool.toggle[title='Super Select']")?.click();
   }
 
@@ -76,9 +76,9 @@ class SuperSelect {
 
   static releaseDifferentPlaceables(entity) {
     canvas.activeLayer.placeables.filter(placeable => {
-      let cond1 = placeable._controlled;
-      let cond2 = placeable.layer.name !== entity.layer.name;
-      let cond3 = placeable.id !== entity.id;
+      const cond1 = placeable._controlled;
+      const cond2 = placeable.layer.name !== entity.layer.name;
+      const cond3 = placeable.id !== entity.id;
       return cond1 && cond2 && cond3
     }).forEach(placeable => {
       placeable.release()
@@ -97,8 +97,8 @@ class SuperSelect {
 
   static addSuperSelectButtons(controls){
     controls.forEach( control => {
-      const cond1 = (canvas && SuperSelect.ACTIVE_LAYERS.includes(control.layer) && canvas.activeLayer.name === control.layer);
-      const cond2 = (!canvas && control.layer === 'TokenLayer');
+      const cond1 = (canvas && canvas.ready && Object.values(SuperSelect.ACTIVE_LAYERS).includes(control.layer) && canvas.activeLayer.options.name === control.layer);
+      const cond2 = ((!canvas || !canvas.ready) && control.layer === 'tokens');
       if (cond1 || cond2) {
         const initialState = SuperSelect._getInitialState();
         control.tools.push({
@@ -145,14 +145,14 @@ Hooks.on('controlToken', (token, into) => {
 // Handling foreign drawers outside of appropriate layer
 
 Hooks.on('createDrawing', () => {
-  if (canvas.activeLayer.name !== 'DrawingsLayer' && SuperSelect.inSuperSelectMode()) {
+  if (canvas.activeLayer.options.name !== 'drawings' && SuperSelect.inSuperSelectMode()) {
     console.log("Super Select: Refreshing because of new drawings outside of activeLayer")
     SuperSelect.refreshSuperSelect(true);
   }
 });
 
 Hooks.on('createTile', () => {
-  if (canvas.activeLayer.name !== 'TilesLayer' && SuperSelect.inSuperSelectMode()) {
+  if (canvas.activeLayer.options.name !== 'background' && SuperSelect.inSuperSelectMode()) {
     console.log("Super Select: Refreshing because of new tiles outside of activeLayer")
     SuperSelect.refreshSuperSelect(true);
   }
@@ -160,7 +160,7 @@ Hooks.on('createTile', () => {
 
 // Sight visibility tweaks
 Hooks.on('sightRefresh', () => {
-  if (SuperSelect.inSuperSelectMode() && canvas.activeLayer.name === 'TokenLayer') {
+  if (SuperSelect.inSuperSelectMode() && canvas.activeLayer.options.name === 'tokens') {
     canvas.activeLayer.placeables.forEach(placeable => {
       if (placeable.visible === undefined) placeable.visible = true;
     })
@@ -173,7 +173,7 @@ $(document).keydown((event) => {
     // 46 == Delete ----- 8 == Backspace
     if (event.which === 46 || event.which === 8) {
       const toDelete = canvas.activeLayer.placeables.filter(placeable => {
-        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.name
+        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.options.name
       });
       if (toDelete.length > 0) {
         toDelete.forEach(placeable => placeable.delete());
@@ -195,7 +195,7 @@ $(document).keydown((event) => {
     if (SuperSelect.ctrlPressed && event.which === 67 ) {
       SuperSelect.ctrlPressed = false;
       const toCopy = canvas.activeLayer.placeables.filter(placeable => {
-        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.name
+        return placeable._controlled && placeable.layer.name !== canvas.activeLayer.options.name
       });
       if (toCopy.length > 0) {
         SuperSelect._copy = [];
@@ -234,19 +234,19 @@ $(document).keyup((event) => {
 });
 
 Hooks.on('deleteToken', () => {
-  if (canvas.activeLayer.name !== 'TokenLayer' && SuperSelect.inSuperSelectMode()) {
+  if (canvas.activeLayer.options.name !== 'tokens' && SuperSelect.inSuperSelectMode()) {
     SuperSelect.refreshSuperSelect(true);
   }
 });
 
 Hooks.on('deleteDrawing', () => {
-  if (canvas.activeLayer.name !== 'DrawingsLayer' && SuperSelect.inSuperSelectMode()) {
+  if (canvas.activeLayer.options.name !== 'drawings' && SuperSelect.inSuperSelectMode()) {
     SuperSelect.refreshSuperSelect(true);
   }
 });
 
 Hooks.on('deleteTile', () => {
-  if (canvas.activeLayer.name !== 'TilesLayer' && SuperSelect.inSuperSelectMode()) {
+  if (canvas.activeLayer.options.name !== 'background' && SuperSelect.inSuperSelectMode()) {
     SuperSelect.refreshSuperSelect(true);
   }
 });
