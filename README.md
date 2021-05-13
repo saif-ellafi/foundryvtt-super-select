@@ -6,6 +6,10 @@ Adds a control toggle that allows selecting, copying & deleting tokens, tiles an
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V14D3AH)
 
+## Check out my other modules!
+* Minimal UI
+* Window Controls
+
 ## Notes
 * There is a configuration that allows having Super Select mode on by default
 * Tokens have priority on top of drawings and tiles
