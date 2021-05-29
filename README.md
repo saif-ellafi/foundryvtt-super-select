@@ -1,15 +1,6 @@
 # Super Select for FoundryVTT
 Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.
 
-## By JeansenVaars
-![JVLogo](logo-small-black.png)
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V14D3AH)
-
-## Check out my other modules!
-* Minimal UI
-* Window Controls
-
 ## Notes
 * There is a configuration that allows having Super Select mode on by default
 * Tokens have priority on top of drawings and tiles
@@ -17,6 +8,16 @@ Adds a control toggle that allows selecting, copying & deleting tokens, tiles an
 * It is recommended to use Foundry VTT's setting to release on left-click
 * Supports DF Hotkey library, with default Shift+S
 * The code is ugly, but it is lightweight, fast and self-contained
+
+## By JeansenVaars
+![JVLogo](logo-small-black.png)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V14D3AH)
+
+## Check out my other modules!
+* Minimal UI
+* Scene Preview
+* Window Controls
 
 ## Please say thanks if you enjoy this!
 I am Doing it as a hobby. Feedback more than welcome.
