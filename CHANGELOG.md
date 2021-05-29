@@ -1,3 +1,6 @@
+### 0.1.1
+* Bugfix: Fixed multiple delete objects of foreign layers
+
 ### 0.1.0
 * Bugfix: Better implementation of delete method for Foundry 0.8.3+
 

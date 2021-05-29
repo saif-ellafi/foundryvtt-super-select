@@ -178,8 +178,10 @@ $(document).keydown((event) => {
         return placeable._controlled && placeable.layer.name !== canvas.activeLayer.name
       });
       if (toDelete.length > 0) {
-        toDelete.forEach(placeable => placeable.document.delete());
+        const sourceLayer = toDelete[0].layer.constructor.documentName;
+        canvas.scene.deleteEmbeddedDocuments(sourceLayer, toDelete.map(placeable => placeable.id));
       }
+      return;
     }
     // 17 == ctrl ----- 91 == cmd
     if (event.keyCode === 17 || event.keyCode === 91) {
@@ -205,6 +207,7 @@ $(document).keydown((event) => {
         const cn = toCopy[0].layer.options.objectClass.name;
         ui.notifications.info(`Copied data for ${SuperSelect._copy.length} ${cn} objects.`);
       }
+      return;
     }
     // 86 == v
     if (SuperSelect.ctrlPressed && event.which === 86 && SuperSelect._copy.length > 0) {
@@ -214,6 +217,7 @@ $(document).keydown((event) => {
       let pos = canvas.app.renderer.plugins.interaction.mouse.getLocalPosition(canvas.tokens);
       layer.pasteObjects(pos, {hidden: SuperSelect.altPressed, snap: !SuperSelect.shiftPressed});
       layer._copy = [];
+      return;
     }
   }
 });
