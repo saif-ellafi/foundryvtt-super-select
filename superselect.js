@@ -263,7 +263,7 @@ Hooks.once('init', () => {
 
   game.settings.register("super-select", "startEnabled", {
     name: "Super Select enabled by Default",
-    hint: "Whether to have Super Select toggled yes/no/remember when changin layers.",
+    hint: "Whether to have Super Select toggled yes/no/remember when changing layers.",
     scope: "world",
     config: true,
     default: 'no',
@@ -294,4 +294,11 @@ Hooks.once('init', () => {
     return this.document.canUserModify(game.user, "update");
   }, 'OVERRIDE');
 
+});
+
+Hooks.once('ready', () => {
+  if (game.settings.get('core', 'leftClickRelease') === false) {
+    const settingName = game.i18n.localize(game.settings.settings.get('core.leftClickRelease').name);
+    console.warn(`SUPERSELECT: Core Setting '${settingName}' is Disabled! It might be tricky to de-select foreign objects with super-select`);
+  }
 });
