@@ -1,3 +1,6 @@
+### 0.1.2
+* Released for the sake of supporting 0.8.x after V9 for a while
+
 ### 0.1.1
 * Bugfix: Fixed multiple delete objects of foreign layers
 

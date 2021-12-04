@@ -1,6 +1,6 @@
 {
   "name": "foundryvtt-super-select",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.",
   "main": "superselect.js",
   "scripts": {
