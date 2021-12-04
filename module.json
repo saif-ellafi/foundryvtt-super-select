@@ -3,7 +3,7 @@
 	"title": "Super Select",
 	"author": "JeansenVaars#2857",
 	"description": "Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"minimumCoreVersion": "9.233",
 	"compatibleCoreVersion": "9.233",
 	"dependencies": [

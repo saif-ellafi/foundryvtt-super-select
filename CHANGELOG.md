@@ -1,3 +1,6 @@
+### 0.2.1
+* Bugfix: Fixed copy-pasting of foreign objects
+
 ### 0.2.0
 * Compatibility: Foundry VTT V9.233+
 
