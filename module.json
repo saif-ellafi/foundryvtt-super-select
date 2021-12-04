@@ -5,7 +5,7 @@
 	"description": "Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.",
 	"version": "0.1.2",
 	"minimumCoreVersion": "0.8.3",
-	"compatibleCoreVersion": "0.8.5",
+	"compatibleCoreVersion": "0.8.9",
 	"dependencies": [
 		{"name": "lib-wrapper"}
 	],
