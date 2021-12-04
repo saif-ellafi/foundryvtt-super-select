@@ -123,7 +123,6 @@ class SuperSelect {
     // Workaround for vision in superselect mode
     if (canvas.ready && SuperSelect.inSuperSelectMode() && canvas.activeLayer?.options.name === 'tokens') {
       canvas.activeLayer.placeables.forEach(placeable => {
-        console.log(placeable);
         if (placeable.visible === undefined) placeable.visible = true;
         if (placeable.updateVisionSource === undefined) placeable.updateVisionSource = function() {};
         if (placeable.updateLightSource === undefined) placeable.updateLightSource = function() {};
@@ -224,7 +223,7 @@ $(document).keydown((event) => {
     }
     // 86 == v
     if (SuperSelect.ctrlPressed && event.which === 86 && SuperSelect._copy.length > 0) {
-      canvas.getLayer(SuperSelect._copy[0].layer.name).activate();
+      canvas[SuperSelect._copy[0].layer.options.name].activate();
       const layer = canvas.activeLayer;
       layer._copy = SuperSelect._copy;
       let pos = canvas.app.renderer.plugins.interaction.mouse.getLocalPosition(canvas.tokens);
