@@ -1,3 +1,6 @@
+### 0.2.0
+* Compatibility: Foundry VTT V9.233+
+
 ### 0.1.1
 * Bugfix: Fixed multiple delete objects of foreign layers
 
