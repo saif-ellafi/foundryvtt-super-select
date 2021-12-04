@@ -13,6 +13,6 @@
 	"styles": [],
 	"scripts": [ "superselect.js" ],
 	"url": "https://github.com/saif-ellafi/foundryvtt-super-select",
-	"manifest": "https://raw.githubusercontent.com/saif-ellafi/foundryvtt-super-select/master/module.json",
-	"download": "https://github.com/saif-ellafi/foundryvtt-super-select/archive/refs/heads/master.zip"
+	"manifest": "https://github.com/saif-ellafi/foundryvtt-super-select/releases/latest/download/module.json",
+	"download": "https://github.com/saif-ellafi/foundryvtt-super-select/releases/download/0.2.1/foundryvtt-window-controls_0.2.1.zip"
 }
