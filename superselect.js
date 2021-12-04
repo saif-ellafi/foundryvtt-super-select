@@ -1,11 +1,11 @@
 class SuperSelect {
 
-  static ACTIVE_LAYERS = {
-    DrawingsLayer: 'drawings',
-    BackgroundLayer: 'background',
-    ForegroundLayer: 'foreground',
-    TokenLayer: 'tokens'
-  }
+  static ACTIVE_LAYERS = [
+    'drawings',
+    'background',
+    'foreground',
+    'tokens'
+  ]
 
   static ctrlPressed = false;
   static shiftPressed = false;
@@ -31,8 +31,8 @@ class SuperSelect {
   static _activateSuperMode() {
     if (!canvas.ready) return;
     let mergedPlaceables = []
-    Object.keys(SuperSelect.ACTIVE_LAYERS).forEach(layer => {
-      const enriched = canvas.getLayer(layer).placeables.map(child => {
+    SuperSelect.ACTIVE_LAYERS.forEach(layer => {
+      const enriched = canvas[layer].placeables.map(child => {
         if (child.updateSource === undefined) {
           child.updateSource = function () {};
         }
@@ -41,7 +41,7 @@ class SuperSelect {
       mergedPlaceables = mergedPlaceables.concat(enriched);
     });
     canvas.activeLayer.objects.children = mergedPlaceables;
-    SuperSelect._mergedLayer = canvas.activeLayer.name;
+    SuperSelect._mergedLayer = canvas.activeLayer.options.name;
   }
 
   static _deactivateSuperMode(layer) {
@@ -62,14 +62,14 @@ class SuperSelect {
   }
 
   static simulateSuperClick() {
-    if (Object.values(SuperSelect.ACTIVE_LAYERS).includes(canvas.activeLayer.options.name))
+    if (SuperSelect.ACTIVE_LAYERS.includes(canvas.activeLayer.options.name))
       $("#controls li.control-tool.toggle[title='Super Select']")?.click();
   }
 
   static refreshSuperSelect(forceRemember) {
     if (SuperSelect._mergedLayer) {
       console.log("Super Select: Cleanup Merged Layer: " + SuperSelect._mergedLayer);
-      SuperSelect._deactivateSuperMode(canvas.getLayer(SuperSelect._mergedLayer));
+      SuperSelect._deactivateSuperMode(canvas[SuperSelect._mergedLayer]);
     }
     if (canvas && forceRemember) {
       SuperSelect._activateSuperMode();
@@ -90,16 +90,16 @@ class SuperSelect {
   static inSuperSelectMode() {
     if (game.user?.isGM) {
       return ui.controls
-          .controls.find(c => c.name === ui.controls.activeControl)
-          .tools.find(t => t.name === "superselect")?.active;
+        .controls.find(c => c.name === ui.controls.activeControl)
+        .tools.find(t => t.name === "superselect")?.active;
     } else {
       return false;
     }
   }
 
-  static addSuperSelectButtons(controls){
+  static addSuperSelectButtons(controls) {
     controls.forEach( control => {
-      const cond1 = (canvas && canvas.ready && Object.values(SuperSelect.ACTIVE_LAYERS).includes(control.layer) && canvas.activeLayer.options.name === control.layer);
+      const cond1 = (canvas && canvas.ready && SuperSelect.ACTIVE_LAYERS.includes(control.layer) && canvas.activeLayer.options.name === control.layer);
       const cond2 = ((!canvas || !canvas.ready) && control.layer === 'tokens');
       if (cond1 || cond2) {
         const initialState = SuperSelect._getInitialState();
@@ -119,29 +119,46 @@ class SuperSelect {
     })
   }
 
+  static visionWorkaround() {
+    // Workaround for vision in superselect mode
+    if (canvas.ready && SuperSelect.inSuperSelectMode() && canvas.activeLayer?.options.name === 'tokens') {
+      canvas.activeLayer.placeables.forEach(placeable => {
+        console.log(placeable);
+        if (placeable.visible === undefined) placeable.visible = true;
+        if (placeable.updateVisionSource === undefined) placeable.updateVisionSource = function() {};
+        if (placeable.updateLightSource === undefined) placeable.updateLightSource = function() {};
+      })
+    }
+  }
+
 }
 
 Hooks.on('getSceneControlButtons', (controls) => {
-  if (game.user.isGM) {
+  if (game.user.isGM)
     SuperSelect.addSuperSelectButtons(controls)
-  }
 });
 
 // Selecting and De-Selecting management
 
 Hooks.on('controlTile', (tile, into) => {
-  if (SuperSelect.inSuperSelectMode() && into)
+  if (SuperSelect.inSuperSelectMode() && into) {
     SuperSelect.releaseDifferentPlaceables(tile);
+    SuperSelect.visionWorkaround();
+  }
 });
 
 Hooks.on('controlDrawing', (drawing, into) => {
-  if (SuperSelect.inSuperSelectMode() && into)
+  if (SuperSelect.inSuperSelectMode() && into) {
     SuperSelect.releaseDifferentPlaceables(drawing);
+    SuperSelect.visionWorkaround();
+  }
 });
 
 Hooks.on('controlToken', (token, into) => {
-  if (SuperSelect.inSuperSelectMode() && into)
+  if (SuperSelect.inSuperSelectMode() && into) {
     SuperSelect.releaseDifferentPlaceables(token);
+    SuperSelect.visionWorkaround();
+  }
 });
 
 // Handling foreign drawers outside of appropriate layer
@@ -162,11 +179,7 @@ Hooks.on('createTile', () => {
 
 // Sight visibility tweaks
 Hooks.on('sightRefresh', () => {
-  if (canvas.ready && SuperSelect.inSuperSelectMode() && canvas.activeLayer?.options.name === 'tokens') {
-    canvas.activeLayer.placeables.forEach(placeable => {
-      if (placeable.visible === undefined) placeable.visible = true;
-    })
-  }
+  SuperSelect.visionWorkaround();
 });
 
 // Delete Action Handler for foreigner placeables
@@ -263,7 +276,7 @@ Hooks.once('init', () => {
 
   game.settings.register("super-select", "startEnabled", {
     name: "Super Select enabled by Default",
-    hint: "Whether to have Super Select toggled yes/no/remember when changin layers.",
+    hint: "Whether to have Super Select toggled yes/no/remember when changing layers.",
     scope: "world",
     config: true,
     default: 'no',
@@ -294,4 +307,11 @@ Hooks.once('init', () => {
     return this.document.canUserModify(game.user, "update");
   }, 'OVERRIDE');
 
+});
+
+Hooks.once('ready', () => {
+  if (game.settings.get('core', 'leftClickRelease') === false) {
+    const settingName = game.i18n.localize(game.settings.settings.get('core.leftClickRelease').name);
+    console.warn(`SUPERSELECT: Core Setting '${settingName}' is Disabled! It might be tricky to de-select foreign objects with super-select`);
+  }
 });
