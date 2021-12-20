@@ -1,6 +1,6 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/saif-ellafi/foundryvtt-super-select/total?logo=GitHub) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/saif-ellafi/foundryvtt-super-select/latest/total) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/saif-ellafi/foundryvtt-super-select) ![GitHub issues](https://img.shields.io/github/issues-raw/saif-ellafi/foundryvtt-super-select) ![GitHub](https://img.shields.io/github/license/saif-ellafi/foundryvtt-super-select)
 # Super Select for FoundryVTT
-### _Created by: JeansenVaars_
+### _Created by: JeansenVaars_ - [Invite me a coffee if you like this module :D](https://ko-fi.com/jeansenvaars)
 Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.
 
 ## Notes
