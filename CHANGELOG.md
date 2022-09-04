@@ -1,3 +1,6 @@
+### 0.3.0
+* Compatibility: Foundry VTT V10+
+
 ### 0.2.2
 * Compatibility: Foundry VTT V9.233+
 

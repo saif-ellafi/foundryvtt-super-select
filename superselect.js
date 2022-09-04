@@ -2,8 +2,7 @@ class SuperSelect {
 
   static ACTIVE_LAYERS = [
     'drawings',
-    'background',
-    'foreground',
+    'tiles',
     'tokens'
   ]
 
@@ -32,6 +31,7 @@ class SuperSelect {
     if (!canvas.ready) return;
     let mergedPlaceables = []
     SuperSelect.ACTIVE_LAYERS.forEach(layer => {
+      console.log(layer);
       const enriched = canvas[layer].placeables.map(child => {
         if (child.updateSource === undefined) {
           child.updateSource = function () {};
@@ -170,7 +170,7 @@ Hooks.on('createDrawing', () => {
 });
 
 Hooks.on('createTile', () => {
-  if (canvas.activeLayer.options.name !== 'background' && SuperSelect.inSuperSelectMode()) {
+  if (canvas.activeLayer.options.name !== 'tiles' && SuperSelect.inSuperSelectMode()) {
     console.log("Super Select: Refreshing because of new tiles outside of activeLayer")
     SuperSelect.refreshSuperSelect(true);
   }
@@ -264,7 +264,7 @@ Hooks.on('deleteDrawing', () => {
 });
 
 Hooks.on('deleteTile', () => {
-  if (canvas.activeLayer.options.name !== 'background' && SuperSelect.inSuperSelectMode()) {
+  if (canvas.activeLayer.options.name !== 'tiles' && SuperSelect.inSuperSelectMode()) {
     SuperSelect.refreshSuperSelect(true);
   }
 });
