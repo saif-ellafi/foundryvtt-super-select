@@ -31,7 +31,6 @@ class SuperSelect {
     if (!canvas.ready) return;
     let mergedPlaceables = []
     SuperSelect.ACTIVE_LAYERS.forEach(layer => {
-      console.log(layer);
       const enriched = canvas[layer].placeables.map(child => {
         if (child.updateSource === undefined) {
           child.updateSource = function () {};
@@ -126,6 +125,7 @@ class SuperSelect {
         if (placeable.visible === undefined) placeable.visible = true;
         if (placeable.updateVisionSource === undefined) placeable.updateVisionSource = function() {};
         if (placeable.updateLightSource === undefined) placeable.updateLightSource = function() {};
+        if (placeable._refreshVisibility === undefined) placeable._refreshVisibility = function() {};
       })
     }
   }

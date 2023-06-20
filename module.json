@@ -1,22 +1,25 @@
 {
-	"name": "super-select",
+	"id": "super-select",
 	"title": "Super Select",
 	"author": "JeansenVaars#2857",
 	"description": "Adds a control toggle that allows selecting, copying & deleting tokens, tiles and drawings at the same time.",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"minimumCoreVersion": "10",
 	"compatibility": {
 		"minimum": "10",
-		"verified": "10.284",
-		"maximum": "10"
+		"verified": "11.302",
+		"maximum": "11"
 	},
-	"dependencies": [
-		{"name": "lib-wrapper"}
-	],
+	"relationships": {
+		"requires":  [{
+			"id": "lib-wrapper",
+			"type": "module"
+		}]
+	},
   	"esmodules": [],
 	"styles": [],
 	"scripts": [ "superselect.js" ],
 	"url": "https://github.com/saif-ellafi/foundryvtt-super-select",
 	"manifest": "https://github.com/saif-ellafi/foundryvtt-super-select/releases/latest/download/module.json",
-	"download": "https://github.com/saif-ellafi/foundryvtt-super-select/releases/download/0.3.0/foundryvtt-super-select_0.3.0.zip"
+	"download": "https://github.com/saif-ellafi/foundryvtt-super-select/releases/download/0.4.0/foundryvtt-super-select_0.4.0.zip"
 }
